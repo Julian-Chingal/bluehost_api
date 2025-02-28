@@ -1,24 +1,27 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response, ErrorRequestHandler } from "express";
 
-export const GlobalErrors = (
+export const GlobalErrors: ErrorRequestHandler = (
     error: unknown,
     _: Request,
     res: Response,
     next: NextFunction
 ) => {
     if (res.headersSent) {
-        return next(error);
+        next(error);
+        return;
     }
 
     if (error instanceof CustomError) {
-        return res.status(error.status).json({ message: error.message });
+        res.status(error.status).json({ message: error.message });
+        return;
     }
 
     if (error instanceof Error) {
-        return res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message });
+        return;
     }
 
-    return res.status(500).json({ message: 'Internal Server Error' }); 
+    res.status(500).json({ message: 'Internal Server Error' });
 };
 
 export class CustomError extends Error {

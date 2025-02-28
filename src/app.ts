@@ -22,8 +22,8 @@ app.use(cors({
 
 // Routes
 app.use('/palermo/api_node', router)
-app.use(GlobalErrors)
 app.use(unknowEndpoint)
+app.use(GlobalErrors)
 
 // Return the application
 export default app;
