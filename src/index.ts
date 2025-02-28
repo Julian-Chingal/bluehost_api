@@ -1,5 +1,6 @@
-import app from './server'
+import app from './app'
 
-app.listen(3000, () => {
-    console.log('Server is listening on port 3000')
-})
+app.listen(app.get('port'), () => {
+    console.log(`\n🚀 Server is running on: \n
+        ➜ Local: \x1b[32mhttp://localhost:${app.get('port')}/palermo/api_node\x1b[0m`)
+});

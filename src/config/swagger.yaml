@@ -1,0 +1,177 @@
+openapi: 3.0.0
+info:
+  title: PALERMO API
+  description: API para la gestión de remisiones de la empresa Palermo
+  version: 1.0.0
+servers: 
+  - url: http://localhost:3000/palermo/api_node
+    description: Servidor local
+  - url: https://modulogeinsp.com/palermo/api_node
+    description: Servidor de producción
+tags:
+  - name: Auth
+    description: Autenticación de usuarios
+  - name: Remissions
+    description: Gestion de remisiones 
+  - name: Terminal
+    description: Optiene fecha y hora de entrada y salida de la terminal 
+
+paths:
+  # Path: auth
+
+  # Path: remissions
+  /remissions:
+    get:
+      tags:
+        - Remissions
+      summary: Listar remisiones
+      description: Lista todas las remisiones
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Remission'
+    put:
+      tags:
+        - Remissions
+      summary: Actualizar remisión
+      description: Actualiza el estado de una remisión
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRemission'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Remission'
+  /remissions/{remissionNumber}:
+    get:
+      tags:
+        - Remissions
+      summary: Remision por número
+      description: Obtiene una remisión por su número
+      parameters:
+        - name: remissionNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Remission'
+
+  /remissions/fechaentrada/{remissionNumber}:
+    get:
+      tags:
+        - Terminal
+      summary: Entrada a la terminal
+      description: Obtiene la fecha y hora de entrada a la terminal
+      parameters:
+        - name: remissionNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  date:
+                    type: string
+                    format: date-time
+  /remissions/fechasalida/{remissionNumber}:
+    get: 
+      tags:
+        - Terminal
+      summary: Salida de la terminal
+      description: Obtiene la fecha y hora de salida de la terminal
+      parameters:
+        - name: remissionNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  date:
+                    type: string
+                    format: date-time
+
+components:
+  schemas:
+    Remission:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        code:
+          type: string
+        date:
+          type: string
+          format: date
+        client:
+          type: string
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+              name:
+                type: string
+              quantity:
+                type: integer
+                format: int32
+              price:
+                type: number
+                format: float
+    UpdateRemission:
+      type: object
+      required:
+        - token
+        - noremision
+      properties:
+        estado:
+          type: string
+          example: 'DESCARGADO'
+        terminal:
+          type: string
+          example: 'PALERMO'
+        usuario:
+          type: string
+          example: 'usuario1@gmail.com'
+        token:
+          type: string
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzdWFyaW8xQGdtYWlsLmNvbSIsImlhdCI6MTYxNzQwNjYwMCwiZXhwIjoxNjE3NDEwMjAwfQ.7'
+        noremision:
+          type: string
+          example: '0001'
+    
