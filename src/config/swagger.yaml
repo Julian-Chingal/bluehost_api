@@ -10,7 +10,7 @@ servers:
     description: Servidor de producción
 tags:
   - name: Auth
-    description: Autenticación de usuarios
+    description: Autenticación de usuarios, generacion de token
   - name: Remissions
     description: Gestion de remisiones 
   - name: Terminal
@@ -71,9 +71,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Remission'
+                $ref: '#/components/schemas/Remission'
 
   /remissions/fechaentrada/{remissionNumber}:
     get:
@@ -93,11 +91,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  date:
-                    type: string
-                    format: date-time
+                $ref: '#/components/schemas/DateRemission'
+                
+                
   /remissions/fechasalida/{remissionNumber}:
     get: 
       tags:
@@ -116,43 +112,31 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  date:
-                    type: string
-                    format: date-time
+                $ref: '#/components/schemas/DateRemission'
 
 components:
   schemas:
     Remission:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-        code:
+        no_remision:
           type: string
-        date:
+          example: '0001'
+        fecha_hora_cargue:
           type: string
-          format: date
-        client:
+          example: '2021-04-01T10:00:00'
+        placa_carro:
           type: string
-        products:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-                format: int64
-              name:
-                type: string
-              quantity:
-                type: integer
-                format: int32
-              price:
-                type: number
-                format: float
+          example: 'ABC123'
+        cedula_conductor:
+          type: string
+          example: '1234567890'
+        nombre_conductor:
+          type: string
+          example: 'Juan Perez'
+        producto:
+          type: string
+          example: 'HOPO'
     UpdateRemission:
       type: object
       required:
@@ -174,4 +158,11 @@ components:
         noremision:
           type: string
           example: '0001'
+    DateRemission:
+      type: object
+      properties:
+        fecha_hora:
+          type: string
+          example: '2021-04-01T10:00:00'
+          format: date-time
     

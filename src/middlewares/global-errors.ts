@@ -11,15 +11,15 @@ export const GlobalErrors = (
     }
 
     if (error instanceof CustomError) {
-        res.status(error.status).send({ message: error.message });
+        return res.status(error.status).json({ message: error.message });
     }
 
     if (error instanceof Error) {
-        res.status(500).send({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 
-    res.status(500).json({ message: 'Internal Server Error' });
-}
+    return res.status(500).json({ message: 'Internal Server Error' }); 
+};
 
 export class CustomError extends Error {
     status: number;

@@ -5,7 +5,7 @@ export class RemissionController {
     static async get(req: Request, res: Response, next: NextFunction) {
         try {
             const remissions = await RemissionService.getRemissions();
-            res.send(remissions).status(200);
+            res.status(200).send(remissions);
         } catch (error) {
             next(error);
         }
@@ -14,9 +14,8 @@ export class RemissionController {
     static async getByNumber(req: Request, res: Response, next: NextFunction) {
         try {
             const { remissionNumber } = req.params;
-            console.log(remissionNumber);
             const remission = await RemissionService.getRemissionByNumber(remissionNumber);
-            res.send(remission).status(200);
+            res.status(200).send(remission);
         } catch (error) {
             next(error);
         }
@@ -26,7 +25,7 @@ export class RemissionController {
         try {
             const { remissionNumber } = req.params;
             const remission = await RemissionService.getDateByRemissionNumber(remissionNumber);
-            res.send(remission).status(200);
+            res.status(200).send(remission)
         } catch (error) {
             next(error);
         }
@@ -36,7 +35,7 @@ export class RemissionController {
         try {
             const { remissionNumber } = req.params;
             const remission = await RemissionService.getDateByRemissionNumber(remissionNumber);
-            res.send(remission).status(200);
+            res.status(200).send(remission)
         } catch (error) {
             next(error);
         }
@@ -46,7 +45,7 @@ export class RemissionController {
         try {
             const { body } = req;
             const remission = await RemissionService.updateRemission(body);
-            res.send(remission).status(200);
+            res.status(202).json(remission)
         } catch (error) {
             next(error);
         }

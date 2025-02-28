@@ -1,13 +1,12 @@
-interface IRemissions {
-    id: number;
-}
-
-export class GetRemissionsDto implements IRemissions {
+export class GetRemissionsDto {
     constructor(
-        public id: number
-    ) {
-
-    }
+        public no_remision: string,
+        public fecha_hora_cargue: string,
+        public placa_carro: string,
+        public cedula_conductor: string,
+        public nombre_conductor: string,
+        public producto: string,
+    ) {}
 }
 
 export class UpdateRemissionsDto {
