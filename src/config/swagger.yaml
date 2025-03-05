@@ -4,10 +4,10 @@ info:
   description: API para la gestión de remisiones de la empresa Palermo
   version: 1.0.0
 servers: 
-  - url: http://localhost:3000/palermo/api
-    description: Servidor local
   - url: https://modulogeinsp.com/palermo/api
     description: Servidor de producción
+  - url: http://localhost:3000/palermo/api
+    description: Servidor local
 tags:
   - name: Auth
     description: Autenticación de usuarios, generacion de token
@@ -69,12 +69,16 @@ paths:
             schema:
               $ref: '#/components/schemas/UpdateRemission'
       responses:
-        '201':
-          description: Created
+        '202':
+          description: Updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Remission'
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Remisión No 12654 actualizada con éxito"
   /remissions/{remissionNumber}:
     get:
       tags:
