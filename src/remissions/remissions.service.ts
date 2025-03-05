@@ -65,7 +65,7 @@ export class RemissionService {
         if (!tokenValid) {
             throw new BadRequestError("Token invalid");
         }
-
+// eliminar usuariio del dto 
         let resp: number;
         if (estado === 'ENTURNADO') {
             resp = await updateState(noremision, estado);
@@ -89,8 +89,6 @@ export class RemissionService {
  * @returns retorna true si el token es valido, false si no lo es
  */
 function validateToken(token: string): boolean {
-    console.log(token);
-    console.log(verifyToken(token));
     return !!verifyToken(token); // Devuelve true si es válido, false si lanza error
   }
 
