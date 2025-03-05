@@ -16,12 +16,11 @@ const pool = mysql.createPool({
 // Check connection
 pool.getConnection((err, conection) => {
     if (err) {
-        console.log(err)
-        console.log('Error connecting to database')
-        return
+        console.log("        ➜ Database: \x1b[31mError\x1b[0m")
+        throw new Error(err.message)
     }
     console.log("        ➜ Database: \x1b[32mConnected\x1b[0m")
-    conection.release()
+    conection.release() 
 });
 
 // Export connection

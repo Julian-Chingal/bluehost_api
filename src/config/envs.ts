@@ -1,8 +1,10 @@
 import 'dotenv/config'
 
-export const config = {
-    PORT: process.env.PORT || 3000,
-}
+export const SALT = process.env.SALT || "salt"
+
+export const JWT_SECRET = process.env.JWT_SECRET || "Prueba_jwt"
+
+export const PORT =  process.env.PORT || 3000
 
 export const dbConfig = {
     DB_NAME: process.env.DB_NAME || "remissions",

@@ -1,5 +1,5 @@
 import { GlobalErrors, unknowEndpoint } from './middlewares';
-import { swaggerInit, config } from './config';
+import { swaggerInit, PORT } from './config';
 import express from 'express';
 import router from './routes';
 import cors from 'cors'
@@ -9,7 +9,7 @@ const app: express.Application = express();
 
 // Config
 app.use(express.json());
-app.set('port', config.PORT)
+app.set('port', PORT)
 app.disable('x-powered-by')
 swaggerInit(app)
 

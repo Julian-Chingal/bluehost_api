@@ -1,8 +1,8 @@
-import { RemissionService } from './remissions.services';
+import { RemissionService } from './remissions.service';
 import { Request, Response, NextFunction } from 'express';
 
 export class RemissionController {
-    static async get(req: Request, res: Response, next: NextFunction) {
+    static async get(_: Request, res: Response, next: NextFunction) {
         try {
             const remissions = await RemissionService.getRemissions();
             res.status(200).send(remissions);

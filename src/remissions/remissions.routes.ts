@@ -9,6 +9,6 @@ router.get("/", RemissionController.get);
 router.get("/:remissionNumber", RemissionController.getByNumber)
 router.get("/fechaentrada/:remissionNumber")
 router.get("/fechasalida/:remissionNumber")
-router.put("/", validateResource(updateRemissionSchema) , RemissionController.put);
+router.put("/", validateResource(updateRemissionSchema), RemissionController.put);
 
 export default router;

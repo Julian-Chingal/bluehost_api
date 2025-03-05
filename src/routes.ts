@@ -1,5 +1,5 @@
-import { Router } from "express";
-import authRouter from "./auth/auth.routes";
+import { Router } from 'express'
+import authRouter from './auth/auth.routes';
 import remisionesRouter from './remissions/remissions.routes'
 
 const router = Router();

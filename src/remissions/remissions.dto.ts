@@ -6,7 +6,7 @@ export class GetRemissionsDto {
         public cedula_conductor: string,
         public nombre_conductor: string,
         public producto: string,
-    ) {}
+    ) { }
 }
 
 export class UpdateRemissionsDto {
@@ -17,5 +17,5 @@ export class UpdateRemissionsDto {
         public nombre: string,
         public token: string,
         public noremision: string,
-    ) {}
+    ) { }
 }

@@ -1,12 +1,13 @@
 import { BadRequestError, CustomError, NotFoundError } from "../middlewares";
 import { UpdateRemissionsDto, GetRemissionsDto } from "./remissions.dto";
+import { verifyToken } from "../utils";
 import pool from "../db/conection";
 
 export class RemissionService {
-   /**
-    * Retorna las remisiones que estan en estado 'EN RUTA'
-    * @returns {Promise<Array<GetRemissionsDto> | {message: string}>} Lista de remisiones o un mensaje si no hay remisiones
-    */
+    /**
+     * Retorna las remisiones que estan en estado 'EN RUTA'
+     * @returns {Promise<Array<GetRemissionsDto> | {message: string}>} Lista de remisiones o un mensaje si no hay remisiones
+     */
     static async getRemissions(): Promise<Array<GetRemissionsDto> | { message: string }> {
         return new Promise((resolve, reject) => {
             const query = "SELECT no_remision,fecha_hora_cargue,placa_carro,cedula_conductor,nombre_conductor,producto FROM remisiones WHERE estado = 'EN RUTA';";
@@ -25,7 +26,7 @@ export class RemissionService {
      */
     static async getRemissionByNumber(remissionNumber: string): Promise<GetRemissionsDto> {
         return new Promise((resolve, reject) => {
-            const query = `SELECT no_remision,fecha_hora_cargue,placa_carro,cedula_conductor,nombre_conductor,producto FROM remisiones WHERE no_remision = ? ORDER BY id DESC LIMIT 1;`;
+            const query = `SELECT no_remision,fecha_hora_cargue,placa_carro,cedula_conductor,nombre_conductor,producto FROM remisiones WHERE no_remision = ? AND estado != 'DESCARGADO' ORDER BY id DESC LIMIT 1;`;
             pool.query(query, [remissionNumber], (err, result) => {
                 if (err) reject(new BadRequestError("Error getting remissions by remissionNumber"));
                 if (result.length === 0) reject(new NotFoundError("Remission not found"));
@@ -34,11 +35,11 @@ export class RemissionService {
         })
     }
 
-       /**
-     * Trae la fecha de la remisión por el número de remisión.
-     * @param {string} remissionNumber - Número de la remisión.
-     * @returns {Promise<{fecha_hora: string}>} Fecha de la remisión.
-     */
+    /**
+  * Trae la fecha de la remisión por el número de remisión.
+  * @param {string} remissionNumber - Número de la remisión.
+  * @returns {Promise<{fecha_hora: string}>} Fecha de la remisión.
+  */
     static async getDateByRemissionNumber(remissionNumber: string): Promise<{ fecha_hora: string }> {
         return new Promise((resolve, reject) => {
             const query = `SELECT fecha_hora FROM eventos WHERE no_remision = ? AND evento LIKE '%EN TERMINAL%' ORDER BY id DESC LIMIT 1;`;
@@ -50,17 +51,17 @@ export class RemissionService {
         })
     }
 
-     /**
-     * Actualiza la remisión.
-     * @param {UpdateRemissionsDto} body - Datos para actualizar la remisión.
-     * @returns {Promise<{message: string}>} Mensaje de éxito.
-     * @throws {BadRequestError} Si el token es inválido o la condición de estado o terminal no es válida.
-     * @throws {CustomError} Si no se pudo actualizar la remisión.
-     */
+    /**
+    * Actualiza la remisión.
+    * @param {UpdateRemissionsDto} body - Datos para actualizar la remisión.
+    * @returns {Promise<{message: string}>} Mensaje de éxito.
+    * @throws {BadRequestError} Si el token es inválido o la condición de estado o terminal no es válida.
+    * @throws {CustomError} Si no se pudo actualizar la remisión.
+    */
     static async updateRemission(body: UpdateRemissionsDto): Promise<{ message: string }> {
         const { estado, token, noremision, terminal } = body;
 
-        const tokenValid = await validateToken(token);
+        const tokenValid = validateToken(token);
         if (!tokenValid) {
             throw new BadRequestError("Token invalid");
         }
@@ -83,22 +84,15 @@ export class RemissionService {
 }
 
 /**
- * Valida el token.
- * @param {string} token - Token a validar.
- * @returns {Promise<number>} Resultado de la validación.
- * @throws {BadRequestError} Si hay un error al obtener el token.
- * @throws {NotFoundError} Si el token no se encuentra.
+ * Verifica si el token es valido.
+ * @param token 
+ * @returns retorna true si el token es valido, false si no lo es
  */
-async function validateToken(token: string): Promise<number> {
-    return new Promise((resolve, reject) => {
-        const query = `SELECT TokenId,UsuarioId,Estado FROM usuarios_token WHERE Token = ? AND estado = "Activo";`;
-        pool.query(query, [token], (error, results) => {
-            if (error) reject(new BadRequestError("Error getting token"));
-            if (results.length === 0) reject(new NotFoundError("Token not found"));
-            resolve(results);
-        })
-    })
-}
+function validateToken(token: string): boolean {
+    console.log(token);
+    console.log(verifyToken(token));
+    return !!verifyToken(token); // Devuelve true si es válido, false si lanza error
+  }
 
 /**
  * Actualiza el estado de la remisión.

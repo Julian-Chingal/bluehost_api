@@ -18,7 +18,29 @@ tags:
 
 paths:
   # Path: auth
-
+  /auth:
+    post:
+      tags:
+        - Auth
+      summary: Autenticación
+      description: Autenticación de usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Auth'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzdWFyaW8xQGdtYWlsLmNvbSIsImlhdCI6MTYxNzQwNjYwMCwiZXhwIjoxNjE3NDEwMjAwfQ.7'
   # Path: remissions
   /remissions:
     get:
@@ -116,6 +138,15 @@ paths:
 
 components:
   schemas:
+    Auth:
+      type: object
+      properties:
+        username:
+          type: string
+          example: 'usuario1@example.com'
+        password:
+          type: string
+          example: '123456'
     Remission:
       type: object
       properties:
