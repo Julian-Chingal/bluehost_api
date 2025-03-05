@@ -65,14 +65,14 @@ export class RemissionService {
         if (!tokenValid) {
             throw new BadRequestError("Token invalid");
         }
-// eliminar usuariio del dto 
+
         let resp: number;
-        if (estado === 'ENTURNADO') {
-            resp = await updateState(noremision, estado);
-        } else if (estado === 'SOLICITADO' && terminal === 'PALERMO') {
-            resp = await updateAllowed(noremision, terminal);
+        if (estado === "ENTURNADO") {
+            resp = await updateState(noremision);
+        } else if (estado === "SOLICITADO" && terminal === "PALERMO") {
+            resp = await updateAllowed(noremision, terminal); // La validación de ENTURNADO ya está en la consulta
         } else {
-            throw new BadRequestError('Condición de estado o terminal no válida');
+            throw new BadRequestError("Condición de estado o terminal no válida");
         }
 
         if (resp >= 1) {
@@ -90,7 +90,7 @@ export class RemissionService {
  */
 function validateToken(token: string): boolean {
     return !!verifyToken(token); // Devuelve true si es válido, false si lanza error
-  }
+}
 
 /**
  * Actualiza el estado de la remisión.
@@ -99,10 +99,10 @@ function validateToken(token: string): boolean {
  * @returns {Promise<number>} Número de filas afectadas.
  * @throws {BadRequestError} Si hay un error al actualizar el estado.
  */
-async function updateState(noremision: string, estado: string): Promise<number> {
+async function updateState(noremision: string): Promise<number> {
     return new Promise((resolve, reject) => {
-        const query = `UPDATE remisiones SET estado = ? WHERE no_remision = ?;`;
-        pool.query(query, [estado, noremision], (err, result) => {
+        const query = `UPDATE remisiones SET estado = "ENTURNADO" WHERE no_remision = ?;`;
+        pool.query(query, noremision, (err, result) => {
             if (err) reject(new BadRequestError("Error updating allowed"));
             resolve(result.affectedRows);
         })
@@ -118,10 +118,19 @@ async function updateState(noremision: string, estado: string): Promise<number> 
  */
 async function updateAllowed(noremision: string, terminal: string): Promise<number> {
     return new Promise((resolve, reject) => {
-        const query = `UPDATE remisiones SET ingreso_zf = "PERMITIDO" WHERE no_remision = ? AND terminal = ?;`;
-        pool.query(query, [terminal, noremision], (err, result) => {
+        const query = `
+            UPDATE remisiones 
+            SET ingreso_zf = "PERMITIDO" 
+            WHERE no_remision = ? 
+            AND terminal = ? 
+            AND estado = "ENTURNADO";
+        `;
+        pool.query(query, [noremision, terminal], (err, result) => {
             if (err) reject(new BadRequestError("Error updating allowed"));
+            if (result.affectedRows === 0) {
+                reject(new BadRequestError("El estado no es ENTURNADO o la remisión no existe"));
+            }
             resolve(result.affectedRows);
-        })
-    })
+        });
+    });
 }
