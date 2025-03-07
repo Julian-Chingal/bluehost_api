@@ -21,19 +21,29 @@ const accessTokenOptions: CookieOptions = {
 const refreshTokenOptions: CookieOptions = {
     ...cookiesOptions,
     expires: new Date(Date.now() + REFRESH_TOKEN_EXPIRES_IN * 60 * 1000),
-    maxAge:  REFRESH_TOKEN_EXPIRES_IN * 60 * 1000,
+    maxAge: REFRESH_TOKEN_EXPIRES_IN * 60 * 1000,
 }
 
 export class Authcontroller {
     static async login(req: Request<object, object, AuthInput['body']>, res: Response, next: NextFunction) {
         try {
             const { body } = req;
-            const { accessToken, refreshToken} = await AuthService.login(body);
-            
+            const { accessToken, refreshToken } = await AuthService.login(body);
+
             res.cookie('access_token', accessToken, accessTokenOptions)
             res.cookie('refresh_token', refreshToken, refreshTokenOptions)
-            
-            res.status(200).json({accessToken, refreshToken});
+            res.cookie('logged_in', 'true', { ...cookiesOptions, httpOnly: false })
+
+            res.status(200).json({ accessToken, refreshToken });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async logoutUser(_: Request, res: Response, next: NextFunction) {
+        try {
+            logout(res);
+            res.status(200).send('Logged out successfully');
         } catch (error) {
             next(error);
         }
@@ -48,4 +58,10 @@ export class Authcontroller {
             next(error);
         }
     }
+}
+
+function logout(res: Response) {
+    res.cookie('access_token', '', { maxAge: -1 })
+    res.cookie('refresh_token', '', { maxAge: -1 })
+    res.cookie('logged_in', '', { maxAge: -1 })
 }
