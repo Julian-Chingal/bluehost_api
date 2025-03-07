@@ -187,6 +187,9 @@ components:
         producto:
           type: string
           example: 'HOPO'
+        acidez_extractora_%:
+          type: decimal
+          example: '0.5'
         estado:
           type: string
           example: 'EN RUTA'
