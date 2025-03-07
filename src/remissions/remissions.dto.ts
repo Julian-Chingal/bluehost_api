@@ -6,6 +6,10 @@ export class GetRemissionsDto {
         public cedula_conductor: string,
         public nombre_conductor: string,
         public producto: string,
+        public acidez_extractora: string,
+        public estado: string,
+        public nit_empresa_transportadora: string,
+        public empresa_transportadora: string,
     ) { }
 }
 

@@ -10,7 +10,11 @@ export class RemissionService {
      */
     static async getRemissions(): Promise<Array<GetRemissionsDto> | { message: string }> {
         return new Promise((resolve, reject) => {
-            const query = "SELECT no_remision,fecha_hora_cargue,placa_carro,cedula_conductor,nombre_conductor,producto FROM remisiones WHERE estado = 'EN RUTA';";
+            const query = `
+            SELECT no_remision, fecha_hora_cargue, placa_carro, cedula_conductor, nombre_conductor, producto, \`acidez_extractora_%\`, estado, transportadoras.nit as nit_empresa_transportadora,  empresa_transportadora 
+            FROM remisiones 
+            INNER JOIN transportadoras ON remisiones.empresa_transportadora = transportadoras.nombre_empresa
+            WHERE estado = 'EN RUTA' OR estado = 'ENTURNADO';`
             pool.query(query, (err, result) => {
                 if (err) reject(new BadRequestError("Error getting remissions"));
                 if (result.length === 0) resolve({ message: "Remissions is empty" });
@@ -26,7 +30,13 @@ export class RemissionService {
      */
     static async getRemissionByNumber(remissionNumber: string): Promise<GetRemissionsDto> {
         return new Promise((resolve, reject) => {
-            const query = `SELECT no_remision,fecha_hora_cargue,placa_carro,cedula_conductor,nombre_conductor,producto FROM remisiones WHERE no_remision = ? AND estado != 'DESCARGADO' ORDER BY id DESC LIMIT 1;`;
+            const query = `
+            SELECT no_remision, fecha_hora_cargue, placa_carro, cedula_conductor, nombre_conductor, producto, \`acidez_extractora_%\`, estado,  transportadoras.nit AS nit_empresa_transportadora, empresa_transportadora 
+            FROM remisiones 
+            INNER JOIN transportadoras ON remisiones.empresa_transportadora = transportadoras.nombre_empresa
+            WHERE no_remision = ? 
+            AND estado = 'EN RUTA' OR estado = 'ENTURNADO' 
+            ORDER BY no_remision DESC LIMIT 1;`
             pool.query(query, [remissionNumber], (err, result) => {
                 if (err) reject(new BadRequestError("Error getting remissions by remissionNumber"));
                 if (result.length === 0) reject(new NotFoundError("Remission not found"));
@@ -101,7 +111,7 @@ function validateToken(token: string): boolean {
  */
 async function updateState(noremision: string): Promise<number> {
     return new Promise((resolve, reject) => {
-        const query = `UPDATE remisiones SET estado = "ENTURNADO" WHERE no_remision = ?;`;
+        const query = `UPDATE remisiones SET estado = "ENTURNADO" WHERE no_remision = ? AND esatado = "EN RUTA";`;
         pool.query(query, noremision, (err, result) => {
             if (err) reject(new BadRequestError("Error updating allowed"));
             resolve(result.affectedRows);

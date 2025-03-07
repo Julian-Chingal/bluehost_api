@@ -26,5 +26,5 @@ export const swaggerInit = (app: Application) => {
         customCss: ".swagger-ui .topbar { background-color: #2a2a2a; }", // Opcional: personaliza el estilo
         customfavIcon: "/favicon.ico", // Opcional: cambia el favicon
       };
-    app.use('/palermo/api/doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions))
+    app.use('/palermo/api_node/doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions))
 }

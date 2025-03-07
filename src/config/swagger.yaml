@@ -4,17 +4,17 @@ info:
   description: API para la gestión de remisiones de la empresa Palermo
   version: 1.0.0
 servers: 
-  - url: https://modulogeinsp.com/palermo/api
+  - url: https://modulogeinsp.com/palermo/api_node
     description: Servidor de producción
-  - url: http://localhost:3000/palermo/api
+  - url: http://localhost:3000/palermo/api_node
     description: Servidor local
 tags:
   - name: Auth
     description: Autenticación de usuarios, generacion de token
   - name: Remissions
     description: Gestion de remisiones 
-  - name: Terminal
-    description: Optiene fecha y hora de entrada y salida de la terminal 
+  # - name: Terminal
+  #   description: Optiene fecha y hora de entrada y salida de la terminal 
 
 paths:
   # Path: auth
@@ -99,46 +99,46 @@ paths:
               schema:
                 $ref: '#/components/schemas/Remission'
 
-  /remissions/fechaentrada/{remissionNumber}:
-    get:
-      tags:
-        - Terminal
-      summary: Entrada a la terminal
-      description: Obtiene la fecha y hora de entrada a la terminal
-      parameters:
-        - name: remissionNumber
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DateRemission'
+  # /remissions/fechaentrada/{remissionNumber}:
+  #   get:
+  #     tags:
+  #       - Terminal
+  #     summary: Entrada a la terminal
+  #     description: Obtiene la fecha y hora de entrada a la terminal
+  #     parameters:
+  #       - name: remissionNumber
+  #         in: path
+  #         required: true
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/DateRemission'
                 
                 
-  /remissions/fechasalida/{remissionNumber}:
-    get: 
-      tags:
-        - Terminal
-      summary: Salida de la terminal
-      description: Obtiene la fecha y hora de salida de la terminal
-      parameters:
-        - name: remissionNumber
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DateRemission'
+  # /remissions/fechasalida/{remissionNumber}:
+  #   get: 
+  #     tags:
+  #       - Terminal
+  #     summary: Salida de la terminal
+  #     description: Obtiene la fecha y hora de salida de la terminal
+  #     parameters:
+  #       - name: remissionNumber
+  #         in: path
+  #         required: true
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/DateRemission'
 
 components:
   schemas:
@@ -172,6 +172,18 @@ components:
         producto:
           type: string
           example: 'HOPO'
+        acidez_extractora_%:
+          type: decimal
+          example: '0.5'
+        estado: 
+          type: string
+          example: 'EN RUTA'
+        nit_empresa_transportadora:
+          type: string
+          example: '1234567890'
+        empresa_transportadora:
+          type: string
+          example: 'Transportes S.A.'
     UpdateRemission:
       type: object
       required:
@@ -193,11 +205,11 @@ components:
         noremision:
           type: string
           example: '0001'
-    DateRemission:
-      type: object
-      properties:
-        fecha_hora:
-          type: string
-          example: '2021-04-01T10:00:00'
-          format: date-time
+    # DateRemission:
+    #   type: object
+    #   properties:
+    #     fecha_hora:
+    #       type: string
+    #       example: '2021-04-01T10:00:00'
+    #       format: date-time
     

@@ -21,7 +21,7 @@ app.use(cors({
 }));
 
 // Routes
-app.use('/palermo/api', router)
+app.use('/palermo/api_node', router)
 app.use(unknowEndpoint)
 app.use(GlobalErrors)
 

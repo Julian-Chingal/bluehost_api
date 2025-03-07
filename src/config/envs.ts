@@ -2,7 +2,7 @@ import 'dotenv/config'
 
 export const SALT = process.env.SALT || "salt"
 
-export const JWT_SECRET = process.env.JWT_SECRET || "Prueba_jwt"
+export const JWT_SECRET = process.env.ACCESS_TOKEN || "Prueba_jwt"
 
 export const PORT =  process.env.PORT || 3000
 
