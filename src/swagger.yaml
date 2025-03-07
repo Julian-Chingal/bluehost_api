@@ -13,12 +13,12 @@ tags:
     description: Autenticación de usuarios, generacion de token
   - name: Remissions
     description: Gestion de remisiones 
-  - name: Terminal
-    description: Optiene fecha y hora de entrada y salida de la terminal 
+  # - name: Terminal
+  #   description: Optiene fecha y hora de entrada y salida de la terminal 
 
 paths:
   # Path: auth
-  /auth:
+  /auth/login:
     post:
       tags:
         - Auth
@@ -44,10 +44,12 @@ paths:
   # Path: remissions
   /remissions:
     get:
+      security:
+        - bearerAuth: []
       tags:
         - Remissions
       summary: Listar remisiones
-      description: Lista todas las remisiones
+      description: Lista todas las remisiones que se encuentran en ruta.
       responses:
         '200':
           description: OK
@@ -58,6 +60,8 @@ paths:
                 items:
                   $ref: '#/components/schemas/Remission'
     put:
+      security:
+        - bearerAuth: []
       tags:
         - Remissions
       summary: Actualizar remisión
@@ -81,6 +85,8 @@ paths:
                     example: "Remisión No 12654 actualizada con éxito"
   /remissions/{remissionNumber}:
     get:
+      security:
+        - bearerAuth: []
       tags:
         - Remissions
       summary: Remision por número
@@ -99,48 +105,57 @@ paths:
               schema:
                 $ref: '#/components/schemas/Remission'
 
-  /remissions/fechaentrada/{remissionNumber}:
-    get:
-      tags:
-        - Terminal
-      summary: Entrada a la terminal
-      description: Obtiene la fecha y hora de entrada a la terminal
-      parameters:
-        - name: remissionNumber
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DateRemission'
+  # /remissions/fechaentrada/{remissionNumber}:
+  #   get:
+  #     security:
+  #       - bearerAuth: []
+  #     tags:
+  #       - Terminal
+  #     summary: Entrada a la terminal
+  #     description: Obtiene la fecha y hora de entrada a la terminal
+  #     parameters:
+  #       - name: remissionNumber
+  #         in: path
+  #         required: true
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/DateRemission'
                 
-                
-  /remissions/fechasalida/{remissionNumber}:
-    get: 
-      tags:
-        - Terminal
-      summary: Salida de la terminal
-      description: Obtiene la fecha y hora de salida de la terminal
-      parameters:
-        - name: remissionNumber
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DateRemission'
+  # /remissions/fechasalida/{remissionNumber}:
+  #   get: 
+  #     security:
+  #       - bearerAuth: []
+  #     tags:
+  #       - Terminal
+  #     summary: Salida de la terminal
+  #     description: Obtiene la fecha y hora de salida de la terminal
+  #     parameters:
+  #       - name: remissionNumber
+  #         in: path
+  #         required: true
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/DateRemission'
+
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     Auth:
       type: object
@@ -172,6 +187,15 @@ components:
         producto:
           type: string
           example: 'HOPO'
+        estado:
+          type: string
+          example: 'EN RUTA'
+        nit_empresa_transportadora:
+          type: string
+          example: '1234567890'
+        empresa_transportadora:
+          type: string
+          example: 'Transportes S.A.'
     UpdateRemission:
       type: object
       required:
@@ -187,17 +211,13 @@ components:
         usuario:
           type: string
           example: 'usuario1@gmail.com'
-        token:
-          type: string
-          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzdWFyaW8xQGdtYWlsLmNvbSIsImlhdCI6MTYxNzQwNjYwMCwiZXhwIjoxNjE3NDEwMjAwfQ.7'
         noremision:
           type: string
           example: '0001'
-    DateRemission:
-      type: object
-      properties:
-        fecha_hora:
-          type: string
-          example: '2021-04-01T10:00:00'
-          format: date-time
-    
+    # DateRemission:
+    #   type: object
+    #   properties:
+    #     fecha_hora:
+    #       type: string
+    #       example: '2021-04-01T10:00:00'
+    #       format: date-time

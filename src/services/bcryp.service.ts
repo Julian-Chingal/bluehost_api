@@ -14,7 +14,3 @@ export const hashPassword = async (password: string): Promise<string> => {
         .toString(`hex`);
     return hash
 }
-
-export const generateRandomToken = async (): Promise<string> => {
-    return crypto.randomBytes(40).toString('hex')
-}

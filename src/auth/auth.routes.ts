@@ -5,7 +5,7 @@ import { authSchema } from './auth.schema';
 
 const router = Router();
 
-router.post("/", validateResource(authSchema), Authcontroller.login)
+router.post("/login", validateResource(authSchema), Authcontroller.login)
 router.post("/register", validateResource(authSchema), Authcontroller.register)
 
 

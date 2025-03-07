@@ -1,11 +1,10 @@
+import { DB_HOST, DB_NAME, DB_PASSWORD, DB_USER } from '.'
 import mysql from 'mysql'
-import { dbConfig } from '../config'
 
-// Destructuring dbConfig
-const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = dbConfig
-
-// Create connection
-const pool = mysql.createPool({
+/**
+ * Create a connection pool to the database
+ */
+export const Pool = mysql.createPool({
     host: DB_HOST,
     user: DB_USER,
     password: DB_PASSWORD,
@@ -13,8 +12,10 @@ const pool = mysql.createPool({
     connectTimeout: 10000
 })
 
-// Check connection
-pool.getConnection((err, conection) => {
+/**
+ * Check if the connection to the database was successful
+ */
+Pool.getConnection((err, conection) => {
     if (err) {
         console.log("        ➜ Database: \x1b[31mError\x1b[0m")
         throw new Error(err.message)
@@ -22,6 +23,3 @@ pool.getConnection((err, conection) => {
     console.log("        ➜ Database: \x1b[32mConnected\x1b[0m")
     conection.release() 
 });
-
-// Export connection
-export default pool
