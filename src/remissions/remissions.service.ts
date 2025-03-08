@@ -11,7 +11,7 @@ export class RemissionService {
     static async getRemissions(): Promise<Array<GetRemissionsDto> | { message: string }> {
         return new Promise((resolve, reject) => {
             const query = `
-            SELECT no_remision, fecha_hora_cargue, placa_carro, cedula_conductor, nombre_conductor, producto, \`acidez_extractora_%\`, estado, transportadoras.nit as nit_empresa_transportadora,  empresa_transportadora 
+            SELECT no_remision, fecha_hora_cargue, placa_carro, cedula_conductor, nombre_conductor, producto, \`acidez_extractora_%\` AS acidez_extractora, estado, transportadoras.nit as nit_empresa_transportadora,  empresa_transportadora 
             FROM remisiones 
             INNER JOIN transportadoras ON remisiones.empresa_transportadora = transportadoras.nombre_empresa
             WHERE estado = 'EN RUTA' OR estado = 'ENTURNADO';`
@@ -31,7 +31,7 @@ export class RemissionService {
     static async getRemissionByNumber(remissionNumber: string): Promise<GetRemissionsDto> {
         return new Promise((resolve, reject) => {
             const query = `
-            SELECT no_remision, fecha_hora_cargue, placa_carro, cedula_conductor, nombre_conductor, producto, \`acidez_extractora_%\`, estado,  transportadoras.nit AS nit_empresa_transportadora, empresa_transportadora 
+            SELECT no_remision, fecha_hora_cargue, placa_carro, cedula_conductor, nombre_conductor, producto, \`acidez_extractora_%\` AS acidez_extractora, estado,  transportadoras.nit AS nit_empresa_transportadora, empresa_transportadora 
             FROM remisiones 
             INNER JOIN transportadoras ON remisiones.empresa_transportadora = transportadoras.nombre_empresa
             WHERE no_remision = ? 

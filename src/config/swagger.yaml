@@ -172,7 +172,7 @@ components:
         producto:
           type: string
           example: 'HOPO'
-        acidez_extractora_%:
+        acidez_extractora:
           type: decimal
           example: '0.5'
         estado: 
